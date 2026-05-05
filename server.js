@@ -24,18 +24,18 @@ app.set('views', path.join(__dirname, 'src/views'));
 // Serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   const title = 'Home';
-  res.render('home', { title });
+  res.render('home', { title });  /** When someone visits /, your server renders the home page and sends it to the browser, with the value "Home" available as title inside the template. */
 });
 
-app.get('/organizations', (req, res) => {
-  const title = 'Organizations';
+app.get('/organizations', async (req, res) => {
+  const title = 'Our Partner Organizations';
   res.render('organizations', { title });
 });
 
-app.get('/projects', (req, res) => {
-  const title = 'Projects';
+app.get('/projects', async (req, res) => {
+  const title = 'Service Projects';
   res.render('projects', { title });
 });
 
