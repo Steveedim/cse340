@@ -4,19 +4,23 @@
 
     <h1><%= title %></h1>
 
-    <ul>
+    <h2>Project Categories</h2>
+
+    <div>
 
         <% categories.forEach(category => { %>
 
-            <li>
-                <a href="/category/<%= category.category_id %>">
+            <a href="/category/<%= category.category_id %>">
+
+                <span>
                     <%= category.name %>
-                </a>
-            </li>
+                </span>
+
+            </a>
 
         <% }) %>
 
-    </ul>
+    </div>
 
 </main>
 
