@@ -3,9 +3,12 @@ import {fileURLToPath} from 'url';
 import path from 'path';
 import { testConnection } from './src/models/db.js';
 import router from './src/routes.js';
+import session from 'express-session';
+import flash from './src/middleware/flash.js';
 
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || "production";
 const PORT = process.env.PORT || 3000;
+const SESSION_SECRET = process.env.SESSION_SECRET;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,6 +22,18 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
 
 // Middleware to log all incoming requests
+app.use(session({
+    secret: SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 60 * 60 * 1000
+    }
+}));
+
+// Use flash message middleware
+app.use(flash);
+
 app.use((req, res, next) => {
     if (NODE_ENV === 'development') {
         console.log(`${req.method} ${req.url}`);
@@ -32,12 +47,15 @@ app.use((req, res, next) => {
     next();
 });
 
-// Use imported routes
-app.use(router);
-
 // Serve static files from the "public" directory
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// serve static files from the "public" directory
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Use imported routes
+app.use(router);
 
 // Catch-all route for 404 errors
 app.use((req, res, next) => {
