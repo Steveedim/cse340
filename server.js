@@ -8,7 +8,7 @@ import flash from './src/middleware/flash.js';
 
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || "production";
 const PORT = process.env.PORT || 3000;
-const SESSION_SECRET = process.env.SESSION_SECRET;
+const SESSION_SECRET = process.env.SESSION_SECRET || 'devSecret123';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,7 +25,7 @@ app.set('views', path.join(__dirname, 'src/views'));
 app.use(session({
     secret: SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         maxAge: 60 * 60 * 1000
     }
@@ -33,6 +33,11 @@ app.use(session({
 
 // Use flash message middleware
 app.use(flash);
+
+app.use((req, res, next) => {
+    res.locals.messages = req.flash();
+    next();
+});
 
 app.use((req, res, next) => {
     if (NODE_ENV === 'development') {
