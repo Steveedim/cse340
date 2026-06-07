@@ -30,9 +30,11 @@
     </ul>
     
 <p>
-    <a href="/new-organization">
-        Add a new organization
-    </a>
+    <% if (user && user.role_name === 'admin') { %>
+        <a href="/new-organization">
+            Add New Organization
+        </a>
+    <% } %>
 </p>
 
 </main>

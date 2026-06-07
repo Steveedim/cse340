@@ -111,4 +111,3 @@ VALUES
 (13, 3),
 (14, 1),
 (15, 2);
-SELECT * FROM public.project_category
