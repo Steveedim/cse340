@@ -10,6 +10,8 @@ import {
     getAllOrganizations
 } from '../models/organizations.js';
 
+import { checkVolunteer } from '../models/volunteer.js';
+
 import {
     body, 
     validationResult 
@@ -30,23 +32,32 @@ const showProjectsPage = async (req, res) => {
 };
 
 
-// Project details page
 const showProjectDetailsPage = async (req, res) => {
 
     const projectId = req.params.id;
 
-    const project =
-        await getProjectDetails(projectId);
+    const project = await getProjectDetails(projectId);
 
-    const categories =
-        await getCategoriesByProjectId(projectId);
+    const categories = await getCategoriesByProjectId(projectId);
 
-    const title = 'Project Details';
+    const user = req.session.user;
+
+    let isVolunteering = false;
+
+    if (user) {
+        isVolunteering =
+            await checkVolunteer(
+                user.user_id,
+                projectId
+            );
+    }
 
     res.render('project', {
-        title,
+        title: 'Project Details',
         project,
-        categories
+        categories,
+        user,
+        isVolunteering
     });
 };
 

@@ -1,32 +1,57 @@
 <%- include('partials/header') %>
 
-<main>
+<h1><%= title %></h1>
 
-    <h1><%= title %></h1>
+<h2>Project Categories</h2>
 
-    <h2>Project Categories</h2>
+<div>
 
-    <div>
+    <% categories.forEach(category => { %>
 
-        <% categories.forEach(category => { %>
+        <a href="/category/<%= category.category_id %>">
 
-            <a href="/category/<%= category.category_id %>">
+            <span>
+                <%= category.name %>
+            </span>
 
-                <span>
-                    <%= category.name %>
-                </span>
+        </a>
 
+    <% }) %>
+
+</div>
+
+<!-- ================= VOLUNTEER SECTION ================= -->
+<% if (user) { %>
+
+    <div style="margin-top: 20px;">
+
+        <% if (!isVolunteering) { %>
+
+            <a href="/project/<%= project.project_id %>/volunteer">
+                Volunteer for this Project
             </a>
 
-        <% }) %>
+        <% } else { %>
+
+            <p>
+                You are volunteering for this project.
+            </p>
+
+            <a href="/project/<%= project.project_id %>/unvolunteer">
+                Remove Volunteer Signup
+            </a>
+
+        <% } %>
 
     </div>
-    <p>
-        <% if (user && user.role_name === 'admin') { %>
-            <a href="/edit-project/<%= project.project_id %>">Edit Project</a>
-        <% } %>
-    </p>
 
-</main>
+<% } %>
+
+<!-- ================= ADMIN EDIT LINK ================= -->
+<p>
+    <% if (user && user.role_name === 'admin') { %>
+        <a href="/edit-project/<%= project.project_id %>">Edit Project</a>
+    <% } %>
+</p>
 
 <%- include('partials/footer') %>

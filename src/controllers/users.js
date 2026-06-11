@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt';
 import { createUser } from '../models/users.js';
 import { authenticateUser } from '../models/users.js';
+import {getVolunteerProjects} from '../models/volunteer.js';
 
 const showUserRegistrationForm = (req, res) => {
     res.render('register', { title: 'Register' });
@@ -74,16 +75,21 @@ const requireLogin = (req, res, next) => {
     next();
 };
 
-const showDashboard = (req, res) => {
+const showDashboard = async (req, res) => {
+
     const user = req.session.user;
+
+    const volunteerProjects =
+        await getVolunteerProjects(
+            user.user_id
+        );
 
     res.render('dashboard', {
         title: 'Dashboard',
-        name: user.name,
-        email: user.email
+        user,
+        volunteerProjects
     });
 };
-
 /**
  * Middleware factory to require specific role for route access
  * Returns middleware that checks if user has the required role

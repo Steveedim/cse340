@@ -1,0 +1,72 @@
+<%- include('../partials/head') %>
+
+<header>
+    <h1><%= project.name %></h1>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="/projects">Projects</a>
+        <a href="/organizations">Organizations</a>
+
+        <% if (user) { %>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/logout">Logout</a>
+        <% } else { %>
+            <a href="/login">Login</a>
+            <a href="/register">Register</a>
+        <% } %>
+    </nav>
+</header>
+
+<main>
+
+    <!-- PROJECT DETAILS -->
+    <section class="project-details">
+        <h2>Project Details</h2>
+
+        <p><strong>Description:</strong> <%= project.description %></p>
+        <p><strong>Date:</strong> <%= project.project_date %></p>
+        <p><strong>Organization ID:</strong> <%= project.organization_id %></p>
+    </section>
+
+    <!-- VOLUNTEER SECTION -->
+    <section class="volunteer-section">
+        <h2>Volunteer</h2>
+
+        <% if (user) { %>
+
+            <% if (!isVolunteering) { %>
+
+                <a class="btn volunteer-btn"
+                   href="/project/<%= project.id %>/volunteer">
+                    🙋 Volunteer for this project
+                </a>
+
+            <% } else { %>
+
+                <p class="status-msg">
+                    ✅ You are volunteering for this project
+                </p>
+
+                <a class="btn remove-btn"
+                   href="/project/<%= project.id %>/unvolunteer">
+                    ❌ Remove volunteering
+                </a>
+
+            <% } %>
+
+        <% } else { %>
+
+            <p>You must be logged in to volunteer.</p>
+
+            <a class="btn login-btn" href="/login">
+                Login
+            </a>
+
+        <% } %>
+
+    </section>
+
+</main>
+
+<%- include('../partials/footer') %>

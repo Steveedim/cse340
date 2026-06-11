@@ -50,6 +50,11 @@ import {
     requireRole
 } from './controllers/users.js';
 
+import {
+    addVolunteerController,
+    removeVolunteerController
+} from './controllers/volunteer.js';
+
 import { testErrorPage } from './controllers/errors.js';
 
 const router = express.Router();
@@ -98,6 +103,9 @@ router.post('/edit-category/:id', requireRole('admin'), processEditCategoryForm)
 
 router.get('/edit-project/:id', requireRole('admin'),showEditProjectForm);
 router.post('/edit-project/:id',requireRole('admin'),processEditProjectForm);
+
+router.get('/project/:projectId/volunteer', requireLogin, addVolunteerController);
+router.get('/project/:projectId/unvolunteer', requireLogin, removeVolunteerController);
 
 // User registration routes
 router.get('/register', showUserRegistrationForm);
