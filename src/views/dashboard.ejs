@@ -1,43 +1,114 @@
 <%- include('partials/header') %>
 
-<h2>Dashboard</h2>
+<h1>Dashboard</h1>
 
-<p>Name: <%= user.name %></p>
-<p>Email: <%= user.email %></p>
-
-<h3>Volunteer Projects</h3>
-
-<% if (volunteerProjects.length > 0) { %>
-
-    <ul>
-
-    <% volunteerProjects.forEach(project => { %>
-
-        <li>
-
-            <strong>
-                <%= project.project_name || project.title %>
-            </strong>
-
-            <a href="/project/<%= project.project_id %>">
-                View
-            </a>
-
-            <a href="/project/<%= project.project_id %>/unvolunteer">
-                Remove
-            </a>
-
-        </li>
-
-    <% }) %>
-
-    </ul>
-
-<% } else { %>
+<div class="dashboard-section">
+    <h2>My Profile</h2>
 
     <p>
-        You have not signed up for any projects.
+        <strong>Name:</strong>
+        <%= user.name %>
     </p>
+
+    <p>
+        <strong>Email:</strong>
+        <%= user.email %>
+    </p>
+
+    <p>
+        <strong>Role:</strong>
+        <%= user.role_name %>
+    </p>
+</div>
+
+<div class="dashboard-section">
+    <h2>My Volunteer Projects</h2>
+
+    <% if (volunteerProjects && volunteerProjects.length > 0) { %>
+
+        <ul class="project-list">
+
+            <% volunteerProjects.forEach(project => { %>
+
+                <li class="project-card">
+
+                    <h3>
+                        <%= project.project_name || project.title %>
+                    </h3>
+
+                    <% if (project.description) { %>
+                        <p><%= project.description %></p>
+                    <% } %>
+
+                    <div class="project-actions">
+
+                        <a
+                            href="/project/<%= project.project_id %>"
+                            class="button"
+                        >
+                            View Project
+                        </a>
+
+                        <a
+                            href="/project/<%= project.project_id %>/unvolunteer"
+                            class="button danger"
+                        >
+                            Remove Volunteer
+                        </a>
+
+                    </div>
+
+                </li>
+
+            <% }) %>
+
+        </ul>
+
+    <% } else { %>
+
+        <p>You have not signed up for any projects.</p>
+
+    <% } %>
+
+</div>
+
+<% if (user.role_name === 'admin' && users && users.length > 0) { %>
+
+<div class="dashboard-section">
+
+    <h2>System Users</h2>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <% users.forEach(person => { %>
+
+                <tr>
+
+                    <td><%= person.name %></td>
+
+                    <td><%= person.email %></td>
+
+                    <td><%= person.role_name %></td>
+
+                </tr>
+
+            <% }) %>
+
+        </tbody>
+
+    </table>
+
+</div>
 
 <% } %>
 

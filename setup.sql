@@ -111,3 +111,8 @@ VALUES
 (13, 3),
 (14, 1),
 (15, 2);
+
+
+SELECT column_name
+FROM information_schema.columns
+WHERE table_name = 'users';

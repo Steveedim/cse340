@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import { createUser } from '../models/users.js';
 import { authenticateUser } from '../models/users.js';
 import {getVolunteerProjects} from '../models/volunteer.js';
+import { getAllUsers } from '../models/users.js';
 
 const showUserRegistrationForm = (req, res) => {
     res.render('register', { title: 'Register' });
@@ -76,20 +77,32 @@ const requireLogin = (req, res, next) => {
 };
 
 const showDashboard = async (req, res) => {
+    try {
 
-    const user = req.session.user;
+        const user = req.session.user;
 
-    const volunteerProjects =
-        await getVolunteerProjects(
-            user.user_id
-        );
+        const volunteerProjects =
+            await getVolunteerProjects(user.user_id);
 
-    res.render('dashboard', {
-        title: 'Dashboard',
-        user,
-        volunteerProjects
-    });
+        let users = [];
+
+        if (user.role_name === 'admin') {
+            users = await getAllUsers();
+        }
+
+        res.render('dashboard', {
+            title: 'Dashboard',
+            user,
+            volunteerProjects,
+            users
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Server Error');
+    }
 };
+
 /**
  * Middleware factory to require specific role for route access
  * Returns middleware that checks if user has the required role
